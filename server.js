@@ -26,8 +26,8 @@ app.get('/token', (req, res) => {
 });
 
 app.get('*', (_, res) => res.sendFile(path.join(__dirname, 'build/index.html')));
-
-app.listen(8081, () => {
+var port = process.env.port || 3000;
+app.listen(port, () => {
     console.log(twilioAccountSid)
     console.log('token server running on 8081')
     }
