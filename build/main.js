@@ -179,6 +179,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/__ivy_ngcc__/fesm2015/router.js");
 /* harmony import */ var _socketio_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../socketio.service */ "./src/app/socketio.service.ts");
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/common.js");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/__ivy_ngcc__/fesm2015/forms.js");
+
 
 
 
@@ -188,9 +190,9 @@ __webpack_require__.r(__webpack_exports__);
 const _c0 = ["onlineUsers"];
 function CreateRoomComponent_div_5_Template(rf, ctx) { if (rf & 1) {
     const _r5 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div");
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 7);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](1);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](2, "button", 6);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](2, "button", 8);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function CreateRoomComponent_div_5_Template_button_click_2_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r5); const user_r3 = ctx.$implicit; const ctx_r4 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r4.sendInvite(user_r3); });
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](3, "Send Invite");
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
@@ -203,11 +205,18 @@ function CreateRoomComponent_div_5_Template(rf, ctx) { if (rf & 1) {
 function CreateRoomComponent_div_9_Template(rf, ctx) { if (rf & 1) {
     const _r8 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div");
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "button", 6);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function CreateRoomComponent_div_9_Template_button_click_1_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r8); const invitation_r6 = ctx.$implicit; const ctx_r7 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r7.join(invitation_r6); });
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](2, "JOIN");
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "input", 9);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("ngModelChange", function CreateRoomComponent_div_9_Template_input_ngModelChange_1_listener($event) { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r8); const ctx_r7 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r7.name = $event; });
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](2, "button", 8);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function CreateRoomComponent_div_9_Template_button_click_2_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r8); const invitation_r6 = ctx.$implicit; const ctx_r9 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r9.join(invitation_r6); });
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](3, "JOIN");
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+} if (rf & 2) {
+    const ctx_r2 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngModel", ctx_r2.name);
 } }
 class CreateRoomComponent {
     constructor(twilioService, router, socketService) {
@@ -253,7 +262,7 @@ class CreateRoomComponent {
         if (!roomName) {
             return;
         }
-        this.twilioService.getToken('Dharmil', roomName).subscribe((d) => {
+        this.twilioService.getToken(this.name, roomName).subscribe((d) => {
             this.accessToken = d['token'];
             localStorage.setItem('token', JSON.stringify({
                 token: this.accessToken,
@@ -265,7 +274,6 @@ class CreateRoomComponent {
         }, (error) => this.log(JSON.stringify(error)));
     }
     connect() {
-        console.log('asdasd');
         let storage = JSON.parse(localStorage.getItem('token') || '{}');
         let date = Date.now();
         if (!this.roomName) {
@@ -273,7 +281,7 @@ class CreateRoomComponent {
             this.message = 'enter username and room name.';
             return;
         }
-        this.twilioService.getToken('Dharmil', this.roomName).subscribe((d) => {
+        this.twilioService.getToken(this.username, this.roomName).subscribe((d) => {
             this.accessToken = d['token'];
             localStorage.setItem('token', JSON.stringify({
                 token: this.accessToken,
@@ -291,7 +299,7 @@ CreateRoomComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefi
     } if (rf & 2) {
         var _t;
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵqueryRefresh"](_t = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵloadQuery"]()) && (ctx.onlineUsers = _t.first);
-    } }, decls: 15, vars: 2, consts: [["id", "video-container"], ["onlineuUsers", ""], [2, "text-align", "center"], [4, "ngFor", "ngForOf"], [1, "box"], [1, "button", 3, "click"], [3, "click"]], template: function CreateRoomComponent_Template(rf, ctx) { if (rf & 1) {
+    } }, decls: 16, vars: 3, consts: [["id", "video-container"], ["onlineuUsers", ""], [2, "text-align", "center"], ["style", "margin-bottom: 10px;", 4, "ngFor", "ngForOf"], [4, "ngFor", "ngForOf"], ["placeholder", "Enter Your Name", "type", "text", 3, "ngModel", "ngModelChange"], [1, "button", 3, "click"], [2, "margin-bottom", "10px"], [3, "click"], ["type", "text", 3, "ngModel", "ngModelChange"]], template: function CreateRoomComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 0);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "div", null, 1);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](3, "h3", 2);
@@ -303,15 +311,18 @@ CreateRoomComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefi
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](7, "h3", 2);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](8, "Invitations");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](9, CreateRoomComponent_div_9_Template, 3, 0, "div", 3);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](9, CreateRoomComponent_div_9_Template, 4, 1, "div", 4);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](10, "div", 4);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](10, "div");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](11, "h3", 2);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](12, "Video Chat");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](13, "button", 5);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function CreateRoomComponent_Template_button_click_13_listener() { return ctx.connect(); });
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](14, "Join");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](13, "input", 5);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("ngModelChange", function CreateRoomComponent_Template_input_ngModelChange_13_listener($event) { return ctx.username = $event; });
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](14, "button", 6);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function CreateRoomComponent_Template_button_click_14_listener() { return ctx.connect(); });
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](15, "Join");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
@@ -320,7 +331,9 @@ CreateRoomComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefi
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx.onlineUsersArray);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](4);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx.invitations);
-    } }, directives: [_angular_common__WEBPACK_IMPORTED_MODULE_4__["NgForOf"]], styles: ["#video-container[_ngcontent-%COMP%] {\r\n    margin: 0 auto;\r\n    max-width: 50%;\r\n    display: flex;\r\n  }\r\n\r\n  .box[_ngcontent-%COMP%] {\r\n    background-color: #f6f6f6;\r\n    border-radius: 3px;\r\n  }\r\n\r\n  .button[_ngcontent-%COMP%] {\r\n    margin-top: 10px;\r\n    padding: 10px;\r\n    margin-right: 17px;\r\n    float: right;\r\n  }\r\n\r\n  input[_ngcontent-%COMP%] {\r\n    display: block;\r\n    width: 80%;\r\n    margin: auto;\r\n    padding: 10px;\r\n    margin-top: 10px;\r\n  }\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvY3JlYXRlLXJvb20vY3JlYXRlLXJvb20uY29tcG9uZW50LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiRUFBRTtJQUNFLGNBQWM7SUFDZCxjQUFjO0lBQ2QsYUFBYTtFQUNmOztFQUVBO0lBQ0UseUJBQXlCO0lBQ3pCLGtCQUFrQjtFQUNwQjs7RUFFQTtJQUNFLGdCQUFnQjtJQUNoQixhQUFhO0lBQ2Isa0JBQWtCO0lBQ2xCLFlBQVk7RUFDZDs7RUFFQTtJQUNFLGNBQWM7SUFDZCxVQUFVO0lBQ1YsWUFBWTtJQUNaLGFBQWE7SUFDYixnQkFBZ0I7RUFDbEIiLCJmaWxlIjoic3JjL2FwcC9jcmVhdGUtcm9vbS9jcmVhdGUtcm9vbS5jb21wb25lbnQuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiICAjdmlkZW8tY29udGFpbmVyIHtcclxuICAgIG1hcmdpbjogMCBhdXRvO1xyXG4gICAgbWF4LXdpZHRoOiA1MCU7XHJcbiAgICBkaXNwbGF5OiBmbGV4O1xyXG4gIH1cclxuXHJcbiAgLmJveCB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjZjZmNmY2O1xyXG4gICAgYm9yZGVyLXJhZGl1czogM3B4O1xyXG4gIH1cclxuXHJcbiAgLmJ1dHRvbiB7XHJcbiAgICBtYXJnaW4tdG9wOiAxMHB4O1xyXG4gICAgcGFkZGluZzogMTBweDtcclxuICAgIG1hcmdpbi1yaWdodDogMTdweDtcclxuICAgIGZsb2F0OiByaWdodDtcclxuICB9XHJcblxyXG4gIGlucHV0IHtcclxuICAgIGRpc3BsYXk6IGJsb2NrO1xyXG4gICAgd2lkdGg6IDgwJTtcclxuICAgIG1hcmdpbjogYXV0bztcclxuICAgIHBhZGRpbmc6IDEwcHg7XHJcbiAgICBtYXJnaW4tdG9wOiAxMHB4O1xyXG4gIH1cclxuIl19 */"] });
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](4);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngModel", ctx.username);
+    } }, directives: [_angular_common__WEBPACK_IMPORTED_MODULE_4__["NgForOf"], _angular_forms__WEBPACK_IMPORTED_MODULE_5__["DefaultValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_5__["NgControlStatus"], _angular_forms__WEBPACK_IMPORTED_MODULE_5__["NgModel"]], styles: ["#video-container[_ngcontent-%COMP%] {\r\n    margin: 0 auto;\r\n    max-width: 80%;\r\n    display: flex;\r\n    justify-content: space-around;\r\n  }\r\n\r\n  .box[_ngcontent-%COMP%] {\r\n    background-color: #f6f6f6;\r\n    border-radius: 3px;\r\n  }\r\n\r\n  .button[_ngcontent-%COMP%] {\r\n    margin-top: 10px;\r\n    padding: 10px;\r\n    margin-right: 17px;\r\n    float: right;\r\n  }\r\n\r\n  input[_ngcontent-%COMP%] {\r\n    display: block;\r\n    width: 80%;\r\n    margin: auto;\r\n    padding: 10px;\r\n    margin-top: 10px;\r\n  }\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvY3JlYXRlLXJvb20vY3JlYXRlLXJvb20uY29tcG9uZW50LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiRUFBRTtJQUNFLGNBQWM7SUFDZCxjQUFjO0lBQ2QsYUFBYTtJQUNiLDZCQUE2QjtFQUMvQjs7RUFFQTtJQUNFLHlCQUF5QjtJQUN6QixrQkFBa0I7RUFDcEI7O0VBRUE7SUFDRSxnQkFBZ0I7SUFDaEIsYUFBYTtJQUNiLGtCQUFrQjtJQUNsQixZQUFZO0VBQ2Q7O0VBRUE7SUFDRSxjQUFjO0lBQ2QsVUFBVTtJQUNWLFlBQVk7SUFDWixhQUFhO0lBQ2IsZ0JBQWdCO0VBQ2xCIiwiZmlsZSI6InNyYy9hcHAvY3JlYXRlLXJvb20vY3JlYXRlLXJvb20uY29tcG9uZW50LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIiAgI3ZpZGVvLWNvbnRhaW5lciB7XHJcbiAgICBtYXJnaW46IDAgYXV0bztcclxuICAgIG1heC13aWR0aDogODAlO1xyXG4gICAgZGlzcGxheTogZmxleDtcclxuICAgIGp1c3RpZnktY29udGVudDogc3BhY2UtYXJvdW5kO1xyXG4gIH1cclxuXHJcbiAgLmJveCB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjZjZmNmY2O1xyXG4gICAgYm9yZGVyLXJhZGl1czogM3B4O1xyXG4gIH1cclxuXHJcbiAgLmJ1dHRvbiB7XHJcbiAgICBtYXJnaW4tdG9wOiAxMHB4O1xyXG4gICAgcGFkZGluZzogMTBweDtcclxuICAgIG1hcmdpbi1yaWdodDogMTdweDtcclxuICAgIGZsb2F0OiByaWdodDtcclxuICB9XHJcblxyXG4gIGlucHV0IHtcclxuICAgIGRpc3BsYXk6IGJsb2NrO1xyXG4gICAgd2lkdGg6IDgwJTtcclxuICAgIG1hcmdpbjogYXV0bztcclxuICAgIHBhZGRpbmc6IDEwcHg7XHJcbiAgICBtYXJnaW4tdG9wOiAxMHB4O1xyXG4gIH1cclxuIl19 */"] });
 /*@__PURE__*/ (function () { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](CreateRoomComponent, [{
         type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"],
         args: [{
@@ -359,19 +372,23 @@ class RoomComponent {
     constructor(twilioService, route) {
         this.twilioService = twilioService;
         this.route = route;
-        this.route.queryParams.subscribe(params => {
+        this.route.queryParams.subscribe((params) => {
             this.roomName = params['roomName'];
         });
         let str = JSON.parse(localStorage.getItem('token'));
         this.accessToken = str.token;
-        this.twilioService.msgSubject.subscribe(r => {
+        this.twilioService.msgSubject.subscribe((r) => {
             this.message = r;
         });
     }
     ngOnInit() {
         this.twilioService.localVideo = this.localVideo;
         this.twilioService.remoteVideo = this.remoteVideo;
-        this.twilioService.connectToRoom(this.accessToken, { name: this.roomName, audio: true, video: { width: 240 } });
+        this.twilioService.connectToRoom(this.accessToken, {
+            name: this.roomName,
+            audio: true,
+            video: { width: 240 },
+        });
     }
     disconnect() {
         if (this.twilioService.roomObj && this.twilioService.roomObj !== null) {
@@ -411,7 +428,7 @@ RoomComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComp
         args: [{
                 selector: 'app-room',
                 templateUrl: './room.component.html',
-                styleUrls: ['./room.component.css']
+                styleUrls: ['./room.component.css'],
             }]
     }], function () { return [{ type: _twilio_service__WEBPACK_IMPORTED_MODULE_1__["TwilioService"] }, { type: _angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"] }]; }, { localVideo: [{
             type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"],
