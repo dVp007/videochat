@@ -48,7 +48,7 @@ app.get('/token', (req, res) => {
 
 app.get('*', (_, res) => res.sendFile(path.join(__dirname, 'build/index.html')));
 
-var server = app.listen(8081, () => console.log('token server running on 8081'));
+var server = app.listen(process.env.PORT, () => console.log('token server running on 8081'));
 const io = socket(server);
 io.on('connection', async function (socket) {
   console.log('Made a socket connection');
