@@ -195,14 +195,14 @@ __webpack_require__.r(__webpack_exports__);
 const _c0 = ["onlineUsers"];
 function CreateRoomComponent_div_5_Template(rf, ctx) { if (rf & 1) {
     const _r5 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 6);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 5);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "div");
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](2, "span", 7);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](2, "span", 6);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](3);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](4, "button", 8);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](4, "button", 7);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function CreateRoomComponent_div_5_Template_button_click_4_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r5); const user_r3 = ctx.$implicit; const ctx_r4 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r4.sendInvite(user_r3.id); });
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](5, "span", 9);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](5, "span", 8);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](6, " phone ");
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
@@ -215,16 +215,16 @@ function CreateRoomComponent_div_5_Template(rf, ctx) { if (rf & 1) {
 } }
 function CreateRoomComponent_div_9_Template(rf, ctx) { if (rf & 1) {
     const _r8 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 6);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "h1", 10);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 5);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "h1", 9);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](2);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](3, "button", 11);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](3, "button", 10);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function CreateRoomComponent_div_9_Template_button_click_3_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r8); const invitation_r6 = ctx.$implicit; const ctx_r7 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r7.reject(invitation_r6.roomName); });
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](4, "Reject");
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](5, "button", 12);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function CreateRoomComponent_div_9_Template_button_click_5_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r8); const invitation_r6 = ctx.$implicit; const ctx_r9 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r9.join(invitation_r6.roomName); });
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](5, "button", 11);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function CreateRoomComponent_div_9_Template_button_click_5_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r8); const invitation_r6 = ctx.$implicit; const ctx_r9 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r9.join(invitation_r6.roomName, invitation_r6.username); });
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](6, "Accept");
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
@@ -256,6 +256,9 @@ class CreateRoomComponent {
             this.onlineUsersArray = response.filter((e) => e.id !== this.sessionId);
             console.log('users array', this.onlineUsersArray);
         });
+        this.socketService.joinRoom().subscribe((response) => {
+            this.connect(response);
+        });
         this.socketService.recieveMessage().subscribe((response) => {
             console.log('response', response);
             this.invitations.push(JSON.parse(response));
@@ -274,8 +277,9 @@ class CreateRoomComponent {
         console.log('userId :', userId);
         this.socketService.sendMessage(userId, this.roomName, this.username);
     }
-    join(roomName) {
+    join(roomName, remoteuser) {
         console.log(roomName);
+        this.socketService.roomConnect(roomName, this.username);
         let storage = JSON.parse(localStorage.getItem('token') || '{}');
         let date = Date.now();
         if (!roomName) {
@@ -288,11 +292,15 @@ class CreateRoomComponent {
                 created_at: date,
             }));
             this.router.navigate(['/room'], {
-                queryParams: { roomName: roomName },
+                queryParams: {
+                    roomName: roomName,
+                    remote: remoteuser,
+                    local: this.username,
+                },
             });
         }, (error) => this.log(JSON.stringify(error)));
     }
-    connect() {
+    connect(remoteName) {
         let storage = JSON.parse(localStorage.getItem('token') || '{}');
         let date = Date.now();
         if (!this.roomName) {
@@ -307,7 +315,11 @@ class CreateRoomComponent {
                 created_at: date,
             }));
             this.router.navigate(['/room'], {
-                queryParams: { roomName: this.roomName },
+                queryParams: {
+                    roomName: this.roomName,
+                    local: this.username,
+                    remote: remoteName,
+                },
             });
         }, (error) => this.log(JSON.stringify(error)));
     }
@@ -322,7 +334,7 @@ CreateRoomComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefi
     } if (rf & 2) {
         var _t;
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵqueryRefresh"](_t = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵloadQuery"]()) && (ctx.onlineUsers = _t.first);
-    } }, decls: 15, vars: 2, consts: [["id", "video-container"], [1, "width-33"], ["onlineuUsers", ""], [1, "is-size-3", "mb-2", 2, "text-align", "center"], ["class", "card px-3 py-3 width-80", 4, "ngFor", "ngForOf"], [1, "button", 3, "click"], [1, "card", "px-3", "py-3", "width-80"], [1, "is-size-5"], [1, "button", "is-small", "is-rounded", "ml-5", 3, "click"], [1, "material-icons"], [1, "is-size-5", "mb-3"], [1, "button", "is-small", "has-background-danger", 2, "border", "none", 3, "click"], [1, "button", "is-small", "has-background-success", "ml-3", 2, "border", "none", 3, "click"]], template: function CreateRoomComponent_Template(rf, ctx) { if (rf & 1) {
+    } }, decls: 10, vars: 2, consts: [["id", "video-container"], [1, "width-33"], ["onlineuUsers", ""], [1, "is-size-3", "mb-2", 2, "text-align", "center"], ["class", "card px-3 py-3 width-80", 4, "ngFor", "ngForOf"], [1, "card", "px-3", "py-3", "width-80"], [1, "is-size-5"], [1, "button", "is-small", "is-rounded", "ml-5", 3, "click"], [1, "material-icons"], [1, "is-size-5", "mb-3"], [1, "button", "is-small", "has-background-danger", 2, "border", "none", 3, "click"], [1, "button", "is-small", "has-background-success", "ml-3", 2, "border", "none", 3, "click"]], template: function CreateRoomComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 0);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "div", 1, 2);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](3, "h3", 3);
@@ -335,15 +347,6 @@ CreateRoomComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefi
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](8, "Invitations");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](9, CreateRoomComponent_div_9_Template, 7, 1, "div", 4);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](10, "div", 1);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](11, "h3", 3);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](12, "Video Chat");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](13, "button", 5);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function CreateRoomComponent_Template_button_click_13_listener() { return ctx.connect(); });
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](14, "Join");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
     } if (rf & 2) {
@@ -479,6 +482,8 @@ class RoomComponent {
         this.socket = socket;
         this.route.queryParams.subscribe((params) => {
             this.roomName = params['roomName'];
+            this.localname = params['local'];
+            this.remotename = params['remote'];
         });
         let str = JSON.parse(localStorage.getItem('token'));
         this.accessToken = str.token;
@@ -512,15 +517,15 @@ RoomComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComp
         var _t;
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵqueryRefresh"](_t = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵloadQuery"]()) && (ctx.localVideo = _t.first);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵqueryRefresh"](_t = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵloadQuery"]()) && (ctx.remoteVideo = _t.first);
-    } }, decls: 11, vars: 0, consts: [["id", "local"], ["localVideo", ""], ["id", "remote"], ["remoteVideo", ""], [1, "button", 3, "click"]], template: function RoomComponent_Template(rf, ctx) { if (rf & 1) {
+    } }, decls: 11, vars: 2, consts: [["id", "local"], ["localVideo", ""], ["id", "remote"], ["remoteVideo", ""], [1, "button", 3, "click"]], template: function RoomComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 0, 1);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](2, "p");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](3, "local video");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](3);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](4, "div", 2, 3);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](6, "p");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](7, "remote video");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](7);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](8, "div");
@@ -529,6 +534,11 @@ RoomComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComp
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](10, "Disconnect");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+    } if (rf & 2) {
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](3);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](ctx.localname);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](4);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](ctx.remotename);
     } }, styles: ["#video-container[_ngcontent-%COMP%] {\r\n    width: 100%;\r\n  }\r\n  \r\n  #remote[_ngcontent-%COMP%], #local[_ngcontent-%COMP%] {\r\n    width: 240px;\r\n    height: 240px;\r\n    margin: 45px auto;\r\n  }\r\n  \r\n  .button[_ngcontent-%COMP%]{\r\n    position:absolute;\r\n    top:39%;\r\n    right:30%;\r\n    margin-top: 10px;\r\n    padding: 10px;\r\n    margin-right: 17px;\r\n  }\r\n  \r\n  #remote[_ngcontent-%COMP%] {\r\n    background-color: blue;\r\n  }\r\n  \r\n  #local[_ngcontent-%COMP%] {\r\n    background-color: red;\r\n  }\r\n  \r\n  #remote[_ngcontent-%COMP%]   p[_ngcontent-%COMP%], #local[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\r\n    text-align: center;\r\n    color: white;\r\n  }\r\n  \r\n  input[_ngcontent-%COMP%] {\r\n    display: block;\r\n    width: 50%;\r\n    margin: auto;\r\n    padding: 2px;\r\n    margin-top: 7px;\r\n  }\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvcm9vbS9yb29tLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7SUFDSSxXQUFXO0VBQ2I7O0VBRUE7SUFDRSxZQUFZO0lBQ1osYUFBYTtJQUNiLGlCQUFpQjtFQUNuQjs7RUFFQTtJQUNFLGlCQUFpQjtJQUNqQixPQUFPO0lBQ1AsU0FBUztJQUNULGdCQUFnQjtJQUNoQixhQUFhO0lBQ2Isa0JBQWtCO0VBQ3BCOztFQUNBO0lBQ0Usc0JBQXNCO0VBQ3hCOztFQUVBO0lBQ0UscUJBQXFCO0VBQ3ZCOztFQUVBO0lBQ0Usa0JBQWtCO0lBQ2xCLFlBQVk7RUFDZDs7RUFFQTtJQUNFLGNBQWM7SUFDZCxVQUFVO0lBQ1YsWUFBWTtJQUNaLFlBQVk7SUFDWixlQUFlO0VBQ2pCIiwiZmlsZSI6InNyYy9hcHAvcm9vbS9yb29tLmNvbXBvbmVudC5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyIjdmlkZW8tY29udGFpbmVyIHtcclxuICAgIHdpZHRoOiAxMDAlO1xyXG4gIH1cclxuICBcclxuICAjcmVtb3RlLCAjbG9jYWwge1xyXG4gICAgd2lkdGg6IDI0MHB4O1xyXG4gICAgaGVpZ2h0OiAyNDBweDtcclxuICAgIG1hcmdpbjogNDVweCBhdXRvO1xyXG4gIH1cclxuICBcclxuICAuYnV0dG9ue1xyXG4gICAgcG9zaXRpb246YWJzb2x1dGU7XHJcbiAgICB0b3A6MzklO1xyXG4gICAgcmlnaHQ6MzAlO1xyXG4gICAgbWFyZ2luLXRvcDogMTBweDtcclxuICAgIHBhZGRpbmc6IDEwcHg7XHJcbiAgICBtYXJnaW4tcmlnaHQ6IDE3cHg7XHJcbiAgfVxyXG4gICNyZW1vdGUge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogYmx1ZTtcclxuICB9XHJcbiAgXHJcbiAgI2xvY2FsIHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6IHJlZDtcclxuICB9XHJcbiAgXHJcbiAgI3JlbW90ZSBwLCAjbG9jYWwgcCB7XHJcbiAgICB0ZXh0LWFsaWduOiBjZW50ZXI7XHJcbiAgICBjb2xvcjogd2hpdGU7XHJcbiAgfVxyXG4gIFxyXG4gIGlucHV0IHtcclxuICAgIGRpc3BsYXk6IGJsb2NrO1xyXG4gICAgd2lkdGg6IDUwJTtcclxuICAgIG1hcmdpbjogYXV0bztcclxuICAgIHBhZGRpbmc6IDJweDtcclxuICAgIG1hcmdpbi10b3A6IDdweDtcclxuICB9XHJcbiAgIl19 */"] });
 /*@__PURE__*/ (function () { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](RoomComponent, [{
         type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"],
@@ -591,10 +601,21 @@ class SocketioService {
             });
         });
     }
+    // Simulate clicking on the specified element.
     getUsers() {
         return rxjs__WEBPACK_IMPORTED_MODULE_3__["Observable"].create((observer) => {
             this.socket.on('new-users', (users) => {
                 observer.next(users);
+            });
+        });
+    }
+    roomConnect(userId, name) {
+        this.socket.emit('room-connected', { userId: userId, username: name });
+    }
+    joinRoom() {
+        return rxjs__WEBPACK_IMPORTED_MODULE_3__["Observable"].create((observer) => {
+            this.socket.on('connectToRoom', (connectRoom) => {
+                observer.next(connectRoom);
             });
         });
     }
@@ -646,7 +667,7 @@ class TwilioService {
         this.renderer = rendererFactory.createRenderer(null, null);
     }
     getToken(username, roomName) {
-        return this.http.get(`./token?identity=${username}&roomName=${roomName}`);
+        return this.http.get(`/token?identity=${username}&roomName=${roomName}`);
     }
     mute() {
         this.roomObj.localParticipant.audioTracks.forEach(function (audioTrack) {

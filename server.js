@@ -47,7 +47,7 @@ app.get("*", (_, res) =>
 );
 
 var server = app.listen(process.env.PORT, () =>
-  console.log("token server running on 8081")
+  console.log("token server running on ")
 );
 const io = socket(server);
 io.on("connection", async function (socket) {
@@ -69,6 +69,10 @@ io.on("connection", async function (socket) {
         username: data.username,
       })
     );
+  });
+  socket.on("room-connected", function (data) {
+    console.log(data);
+    socket.broadcast.to(data.userId).emit("connectToRoom", data.username);
   });
   socket.on("disconnect", function () {
     console.log("Socket :", socket.id);
