@@ -18,7 +18,7 @@ const twilioApiKeySecret = process.env.TWILIO_API_KEY_SECRET;
 app.use(express.static(path.join(__dirname, 'build')));
 app.use(cors());
 
-const activeUsers = new Set();
+var activeUsers = [];
 
 app.get('/token', (req, res) => {
   console.log('accountSID:', twilioAccountSid);
@@ -48,19 +48,29 @@ app.get('/token', (req, res) => {
 
 app.get('*', (_, res) => res.sendFile(path.join(__dirname, 'build/index.html')));
 
-var server = app.listen(process.env.PORT, () => console.log('token server running on 8081'));
+var server = app.listen(8081, () => console.log('token server running on 8081'));
 const io = socket(server);
 io.on('connection', async function (socket) {
   console.log('Made a socket connection');
   socket.on('new-user', function (data) {
-    activeUsers.add(socket.id);
+    console.log(data)
+    activeUsers.push({
+      username: data,
+      id: socket.id
+    });
     io.emit('new-users', [...activeUsers]);
   });
   socket.on('sendMessage', function (data) {
-    socket.broadcast.to(data.id).emit('recieveMessage', data.roomName);
+    console.log(data)
+    socket.broadcast.to(data.id).emit('recieveMessage', JSON.stringify({
+      roomName: data.roomName,
+      username: data.username
+    }));
   });
   socket.on('disconnect', function () {
-    activeUsers.delete(socket.userId);
+    console.log('Socket :', socket.id)
+    activeUsers = activeUsers.filter(e => e.id !== socket.id)
+    console.log(activeUsers)
     io.emit('User disconnected', socket.userId);
   });
 });
