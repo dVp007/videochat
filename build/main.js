@@ -226,7 +226,9 @@ function CreateRoomComponent_div_5_Template(rf, ctx) { if (rf & 1) {
     const ctx_r1 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](3);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](user_r3.username);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](4);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("disabled", !ctx_r1.isCalling);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](3);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", !ctx_r1.isCalling);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", ctx_r1.isCalling);
@@ -286,6 +288,10 @@ class CreateRoomComponent {
             console.log(this.invitations);
             console.log(response);
             this.invitations = this.invitations.filter((e) => e.roomName !== response);
+        });
+        this.socketService.rejected().subscribe((response) => {
+            this.isCalling = false;
+            alert(`${response} has rejected the call`);
         });
     }
     log(message) {
@@ -355,6 +361,7 @@ class CreateRoomComponent {
     }
     reject(invitationId) {
         this.invitations = this.invitations.filter((e) => e.roomName !== invitationId);
+        this.socketService.reject(invitationId, this.username);
         console.log(this.invitations);
     }
 }
@@ -364,13 +371,13 @@ CreateRoomComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefi
     } if (rf & 2) {
         var _t;
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵqueryRefresh"](_t = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵloadQuery"]()) && (ctx.onlineUsers = _t.first);
-    } }, decls: 10, vars: 2, consts: [["id", "video-container"], [1, "width-33"], ["onlineuUsers", ""], [1, "is-size-3", "mb-2", 2, "text-align", "center"], ["class", "card px-3 py-3 width-80", 4, "ngFor", "ngForOf"], [1, "card", "px-3", "py-3", "width-80"], [1, "is-size-5"], [1, "button", "is-small", "is-rounded", "ml-5", "has-background-danger", 2, "color", "white", 3, "click"], [1, "button", "is-small", "is-rounded", "ml-5", 3, "click"], ["class", "material-icons", 4, "ngIf"], [4, "ngIf"], [1, "material-icons"], [1, "is-size-5", "mb-3"], [1, "button", "is-small", "has-background-danger", 2, "border", "none", 3, "click"], [1, "button", "is-small", "has-background-success", "ml-3", 2, "border", "none", 3, "click"]], template: function CreateRoomComponent_Template(rf, ctx) { if (rf & 1) {
+    } }, decls: 10, vars: 2, consts: [["id", "video-container"], [1, "width-33"], ["onlineuUsers", ""], [1, "is-size-3", "mb-2", 2, "text-align", "center"], ["class", "card px-3 py-3 width-80", 4, "ngFor", "ngForOf"], [1, "card", "px-3", "py-3", "width-80"], [1, "is-size-5"], [1, "button", "is-small", "is-rounded", "ml-5", "has-background-danger", 2, "color", "white", 3, "disabled", "click"], [1, "button", "is-small", "is-rounded", "ml-5", 3, "click"], ["class", "material-icons", 4, "ngIf"], [4, "ngIf"], [1, "material-icons"], [1, "is-size-5", "mb-3"], [1, "button", "is-small", "has-background-danger", 2, "border", "none", 3, "click"], [1, "button", "is-small", "has-background-success", "ml-3", 2, "border", "none", 3, "click"]], template: function CreateRoomComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 0);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "div", 1, 2);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](3, "h3", 3);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](4, "Online Users");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](5, CreateRoomComponent_div_5_Template, 9, 3, "div", 4);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](5, CreateRoomComponent_div_5_Template, 9, 4, "div", 4);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](6, "div", 1);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](7, "h3", 3);
@@ -645,6 +652,17 @@ class SocketioService {
     cancelCall(roomName, userId) {
         console.log('cancel-call');
         this.socket.emit('cancelCall', { roomName: roomName, id: userId });
+    }
+    rejected() {
+        return rxjs__WEBPACK_IMPORTED_MODULE_3__["Observable"].create((observer) => {
+            this.socket.on('rejected', (name) => {
+                console.log('Name', name);
+                observer.next(name);
+            });
+        });
+    }
+    reject(userId, username) {
+        this.socket.emit('reject', { userId: userId, username: username });
     }
     callCanceled() {
         return rxjs__WEBPACK_IMPORTED_MODULE_3__["Observable"].create((observer) => {

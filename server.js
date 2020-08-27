@@ -37,52 +37,60 @@ app.get('/token', (req, res) => {
   );
   token.identity = identity;
   const videoGrant = new VideoGrant({
-    room: roomName
+    room: roomName,
   });
   token.addGrant(videoGrant);
   res.status(200).send({
-    token: token.toJwt()
+    token: token.toJwt(),
   });
   console.log(`issued token for ${identity} in room ${roomName}`);
 });
 
 app.get('*', (_, res) => res.sendFile(path.join(__dirname, 'build/index.html')));
 
-
 var server = app.listen(process.env.PORT, () => console.log('token server running on '));
 const io = socket(server);
 io.on('connection', async function (socket) {
   console.log('Made a socket connection');
   socket.on('new-user', function (data) {
-    console.log(data)
+    console.log('New User:', data);
     activeUsers.push({
       username: data,
-      id: socket.id
+      id: socket.id,
     });
     io.emit('new-users', [...activeUsers]);
   });
 
   socket.on('cancelCall', function (data) {
-    console.log('canceledData:', data)
-    socket.broadcast.to(data.id).emit('callcanceled', data.roomName)
-  })
+    console.log('canceledData:', data);
+    socket.broadcast.to(data.id).emit('callcanceled', data.roomName);
+  });
 
   socket.on('sendMessage', function (data) {
-    console.log(data)
-    socket.broadcast.to(data.id).emit('recieveMessage', JSON.stringify({
-      id: data.id,
-      roomName: data.roomName,
-      username: data.username
-    }));
+    console.log('Send mEsage:', data);
+    socket.broadcast.to(data.id).emit(
+      'recieveMessage',
+      JSON.stringify({
+        id: data.id,
+        roomName: data.roomName,
+        username: data.username,
+      })
+    );
   });
   socket.on('room-connected', function (data) {
-    console.log(data)
-    socket.broadcast.to(data.userId).emit('connectToRoom', data.username)
-  })
+    console.log(data);
+    socket.broadcast.to(data.userId).emit('connectToRoom', data.username);
+  });
+
+  socket.on('reject', function (data) {
+    console.log(data);
+    socket.broadcast.to(data.userId).emit('rejected', data.username);
+  });
+
   socket.on('disconnect', function () {
-    console.log('Socket :', socket.id)
-    activeUsers = activeUsers.filter(e => e.id !== socket.id)
-    console.log(activeUsers)
+    console.log('Socket :', socket.id);
+    activeUsers = activeUsers.filter(e => e.id !== socket.id);
+    console.log(activeUsers);
     io.emit('User disconnected', socket.userId);
   });
 });
